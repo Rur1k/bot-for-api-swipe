@@ -3,8 +3,10 @@ import datetime
 
 from aiogram import types
 from aiogram import executor
-from load_all import bot, dp, sqlite_db
-from peewee import *
-from request_api import login
+from load_all import bot, dp
+from request_api import *
 
-login()
+
+@dp.message_handler(commands=['start'])
+async def process_start_command(msg: types.Message):
+    pass

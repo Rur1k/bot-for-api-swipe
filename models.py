@@ -9,13 +9,12 @@ class BaseModel(Model):
 
 
 class UserToken(BaseModel):
+    user = IntegerField()
     chat = IntegerField()
-    token = CharField(max_length=255)
-
-    class Mata:
-        table_name = 'UserToken'
+    token = CharField(max_length=255, default=None)
 
 
 if __name__ == '__main__':
     sqlite_db.connect()
     UserToken.create_table()
+    UserToken.update()
