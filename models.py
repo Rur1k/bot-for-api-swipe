@@ -8,5 +8,14 @@ class BaseModel(Model):
         database = sqlite_db
 
 
+class UserToken(BaseModel):
+    chat = IntegerField()
+    token = CharField(max_length=255)
+
+    class Mata:
+        table_name = 'UserToken'
+
+
 if __name__ == '__main__':
-    sqlite_db.evolve(interactive=False)
+    sqlite_db.connect()
+    UserToken.create_table()

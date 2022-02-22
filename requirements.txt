@@ -13,3 +13,4 @@ typing-extensions==3.10.0.0
 yarl==1.6.3
 python-dotenv==0.19.0
 peewee-db-evolve==3.7.6
+requests

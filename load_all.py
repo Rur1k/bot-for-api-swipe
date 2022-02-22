@@ -13,6 +13,4 @@ bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
 
 # Подключние к БД
-sqlite_db = SqliteDatabase('/', pragmas={
-    'journal_mode': 'wal',
-    'cache_size': -1024*64})
+sqlite_db = SqliteDatabase('bot.db', pragmas={'journal_mode': 'wal'})
