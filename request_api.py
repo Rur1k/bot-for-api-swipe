@@ -24,7 +24,15 @@ def login(email, password):
     r = requests.post(AUTH + 'token/login', data)
 
     data = r.json()
-    print(data['auth_token'])
+
+    if 'non_field_errors' in data:
+        code = 'ERROR'
+        value = 'Логин или пароль указаны не корректно'
+        return code, value
+    else:
+        code = 'SUCCESS'
+        value = data['auth_token']
+        return code, value
 
 
 def logout(token):

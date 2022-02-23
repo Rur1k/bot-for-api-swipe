@@ -1,4 +1,3 @@
-import peeweedbevolve
 from load_all import sqlite_db
 from peewee import *
 
@@ -11,7 +10,7 @@ class BaseModel(Model):
 class UserToken(BaseModel):
     user = IntegerField()
     chat = IntegerField()
-    token = CharField(max_length=255, default=None)
+    token = CharField(max_length=255, null=True, default=None)
 
 
 if __name__ == '__main__':
