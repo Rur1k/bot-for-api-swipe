@@ -4,6 +4,7 @@ from load_all import dp
 
 import handlers.base
 import handlers.auth
+import handlers.admin
 
 
 if __name__ == '__main__':

@@ -48,9 +48,9 @@ def logout(token):
 # account
 
 def account_detail(token=None):
-    data = {}
-    r = requests.get(API + 'account/profile/', data, headers={'Authorization': f'token {token}'})
+    r = requests.get(API + 'account/profile/', headers={'Authorization': f'token {token}'})
     data = r.json()
+    return data
 
 
 def account_update(token=None):

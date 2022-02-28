@@ -9,7 +9,7 @@ from all_requests import request_api, request_db
 # login
 
 
-@dp.message_handler(commands=['login'], state=None)
+@dp.message_handler(lambda message: message.text == "Вход", state=None)
 async def process_login_command(msg: types.Message):
     await bot.send_message(msg.chat.id, 'Введите email')
     await LoginState.email.set()
@@ -40,7 +40,7 @@ async def login_password(msg: types.Message, state: FSMContext):
 
 # registration
 
-@dp.message_handler(commands=['registration'], state=None)
+@dp.message_handler(lambda message: message.text == "Регистрация", state=None)
 async def process_registration_command(msg: types.Message):
     await bot.send_message(msg.chat.id, 'Укажите имя пользователя')
     await RegistrationStates.username.set()
