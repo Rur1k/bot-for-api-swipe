@@ -11,8 +11,13 @@ def registration(username, email, password, phone=None):
         'password': password,
         'phone': phone,
     }
-    r = requests.post(AUTH + '/users/', data)
+    r = requests.post(AUTH + 'users/', data)
     data = r.json()
+
+    if 'id' in data:
+        return True
+    else:
+        return False
 
 
 def login(email, password):
