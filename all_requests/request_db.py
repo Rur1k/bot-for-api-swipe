@@ -1,4 +1,4 @@
-from models import UserToken
+from settings.models import UserToken
 
 
 def create_new_user(user_id, chat_id):

@@ -1,11 +1,12 @@
 import logging
 
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from peewee import SqliteDatabase
+from aiogram import Bot, Dispatcher
+
 from playhouse.sqliteq import SqliteQueueDatabase
 
-from config import TOKEN
-from aiogram import Bot, Dispatcher
+from settings.config import TOKEN
+
 
 logging.basicConfig(format=u'%(filename)s [LINE:%(lineno)d] #%(levelname)-8s [%(asctime)s] %(message)s',
                     level=logging.INFO)

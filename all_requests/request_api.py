@@ -1,6 +1,5 @@
 import requests
-
-from config import AUTH, API
+from settings.config import AUTH, API
 
 
 # AUTH
