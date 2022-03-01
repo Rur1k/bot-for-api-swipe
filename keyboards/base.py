@@ -3,6 +3,6 @@ from aiogram.types import ReplyKeyboardRemove, \
     InlineKeyboardMarkup, InlineKeyboardButton
 
 
-btn_cancel = KeyboardButton('Отмена')
+btn_cancel = KeyboardButton('Отмена/Назад')
 
 button_cancel = ReplyKeyboardMarkup(resize_keyboard=True).add(btn_cancel)

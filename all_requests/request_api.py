@@ -41,11 +41,7 @@ def login(email, password):
 
 def logout(token):
     r = requests.post(AUTH + 'token/logout', headers={'Authorization': f'token {token}'})
-    data = r.json()
-    if not data:
-        return True
-    else:
-        return False
+    return True
 
 
 # API

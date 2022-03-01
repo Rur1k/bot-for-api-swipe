@@ -1,5 +1,6 @@
 from keyboards import auth as key_auth
 from keyboards import base as key_base
+from keyboards import admin as key_admin
 
 from aiogram import types
 from aiogram.dispatcher import FSMContext
@@ -13,20 +14,31 @@ from all_requests import request_api, request_db
 
 @dp.message_handler(lambda message: message.text == "Выход")
 async def process_logout_command(msg: types.Message):
-    token = request_db.get_token_user(msg.from_user.id)
-    state_logout = request_api.logout(token)
-    if state_logout:
-        await bot.send_message(msg.chat.id, 'Вы успешно вылогинились!', reply_markup=key_auth.button_auth)
+    if request_db.is_auth(msg.from_user.id):
+        token = request_db.get_token_user(msg.from_user.id)
+        state_logout = request_api.logout(token)
+        if state_logout:
+            request_db.set_token_user(msg.from_user.id, None, True)
+            await bot.send_message(msg.chat.id, 'Вы успешно вылогинились!', reply_markup=key_auth.button_auth)
+        else:
+            await bot.send_message(msg.chat.id,
+                                   'Упс, что-то произошло не так свяжитесь с разработчиком!',
+                                   reply_markup=key_admin.buttons_menu)
     else:
         await bot.send_message(msg.chat.id,
-                               'Упс, что-то произошло не так свяжитесь с разработчиком!',
-                               reply_markup=key_auth.button_logout)
+                               'Команда не доступна, вы не авторизованы, сначала авторизуйтесь',
+                               reply_markup=key_auth.button_auth)
 
 
 @dp.message_handler(lambda message: message.text == "Вход", state=None)
 async def process_login_command(msg: types.Message):
-    await bot.send_message(msg.chat.id, 'Введите email', reply_markup=key_base.button_cancel)
-    await LoginState.email.set()
+    if not request_db.is_auth(msg.from_user.id):
+        await bot.send_message(msg.chat.id, 'Введите email', reply_markup=key_base.button_cancel)
+        await LoginState.email.set()
+    else:
+        await bot.send_message(msg.chat.id,
+                               'Команда не доступна, вы авторизованы, сначала выйдите',
+                               reply_markup=key_admin.buttons_menu)
 
 
 @dp.message_handler(state=LoginState.email)
@@ -49,7 +61,7 @@ async def login_password(msg: types.Message, state: FSMContext):
                                value+'. Нажмите "Вход" для повторной попытки авторизации',
                                reply_markup=key_auth.button_auth)
     elif code == 'SUCCESS':
-        await bot.send_message(msg.chat.id, "Авторизация прошла успешно.", reply_markup=None)
+        await bot.send_message(msg.chat.id, "Авторизация прошла успешно.", reply_markup=key_admin.buttons_menu)
         request_db.set_token_user(msg.from_user.id, value)
     await state.finish()
 
@@ -58,8 +70,13 @@ async def login_password(msg: types.Message, state: FSMContext):
 
 @dp.message_handler(lambda message: message.text == "Регистрация", state=None)
 async def process_registration_command(msg: types.Message):
-    await bot.send_message(msg.chat.id, 'Укажите имя пользователя', reply_markup=key_base.button_cancel)
-    await RegistrationStates.username.set()
+    if not request_db.is_auth(msg.from_user.id):
+        await bot.send_message(msg.chat.id, 'Укажите имя пользователя', reply_markup=key_base.button_cancel)
+        await RegistrationStates.username.set()
+    else:
+        await bot.send_message(msg.chat.id,
+                               'Команда не доступна, вы авторизованы, сначала выйдите',
+                               reply_markup=key_admin.buttons_menu)
 
 
 @dp.message_handler(state=RegistrationStates.username)
@@ -116,6 +133,6 @@ async def register_phone(msg: types.Message, state: FSMContext):
                                reply_markup=key_auth.button_auth)
     else:
         await bot.send_message(msg.chat.id,
-                               'Регисрация не успешна, для повторной регистрации нажмите "Регистарция"',
+                               'Регисрация не успешна, для повторной регистрации нажмите "Регистрация"',
                                reply_markup=key_auth.button_auth)
     await state.finish()

@@ -7,14 +7,27 @@ def create_new_user(user_id, chat_id):
         UserToken.create(user=user_id, chat=chat_id)
 
 
-def set_token_user(user_id, token):
+def set_token_user(user_id, token, is_delete=False):
     user = UserToken.select().where(UserToken.user == user_id)
-    if user.first():
-        UserToken.update(token=token).where(UserToken.user == user_id).execute()
+    if user.first() and not is_delete:
+        UserToken.update(token=token, is_login=True).where(UserToken.user == user_id).execute()
+    elif user.first() and is_delete:
+        UserToken.update(token=token, is_login=False).where(UserToken.user == user_id).execute()
 
 
 def get_token_user(user_id):
     users = UserToken.select().where(UserToken.user == user_id)
     user = users.first()
     if user:
-        return user.token
+        if user.token is not None and user.is_login:
+            return user.token
+
+
+def is_auth(user_id):
+    users = UserToken.select().where(UserToken.user == user_id)
+    user = users.first()
+    if user:
+        if user.is_login:
+            return True
+        else:
+            return False
