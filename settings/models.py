@@ -1,4 +1,4 @@
-from load_all import sqlite_db
+from .config import sqlite_db
 from peewee import *
 
 
@@ -11,6 +11,7 @@ class UserToken(BaseModel):
     user = IntegerField()
     chat = IntegerField()
     token = CharField(max_length=255, null=True, default=None)
+    is_login = BooleanField(default=False)
 
 
 if __name__ == '__main__':

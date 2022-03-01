@@ -3,13 +3,9 @@ from aiogram.types import ReplyKeyboardRemove, \
     InlineKeyboardMarkup, InlineKeyboardButton
 
 btn_login = KeyboardButton('Вход')
+btn_logout = KeyboardButton('Выход')
 btn_registration = KeyboardButton('Регистрация')
 
-button_auth = ReplyKeyboardMarkup(resize_keyboard=True)
-button_auth.add(btn_login).add(btn_registration)
+button_auth = ReplyKeyboardMarkup(resize_keyboard=True).row(btn_login, btn_registration)
 
-# inline_btn_login = InlineKeyboardButton('Вход', login')
-# inline_btn_registration = InlineKeyboardButton('Регистрация', 'registration')
-#
-# inline_button_auth = InlineKeyboardMarkup(resize_keyboard=True)
-# inline_button_auth.add(inline_btn_login).add(inline_btn_registration)
+button_logout = ReplyKeyboardMarkup(resize_keyboard=True).add(btn_logout)

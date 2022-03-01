@@ -2,7 +2,7 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 import aiogram.utils.markdown as fmt
 
-from load_all import bot, dp
+from settings.config import bot, dp
 from all_requests import request_api, request_db
 
 

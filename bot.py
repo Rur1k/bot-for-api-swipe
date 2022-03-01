@@ -1,6 +1,6 @@
 from aiogram import executor
 
-from load_all import dp
+from settings.config import dp
 
 import handlers.base
 import handlers.auth
