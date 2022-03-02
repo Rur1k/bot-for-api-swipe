@@ -96,7 +96,7 @@ async def account_last_name(msg: types.Message, state: FSMContext):
 
 # announcement
 @dp.message_handler(lambda message: message.text == "Объявления", state=None)
-async def process_profile_command(msg: types.Message):
+async def process_announcement_command(msg: types.Message):
     if request_db.is_auth(msg.from_user.id):
         token = request_db.get_token_user(msg.from_user.id)
         await bot.send_message(msg.chat.id, 'Зашли в Объявления', reply_markup=key_base.button_cancel)
@@ -106,17 +106,51 @@ async def process_profile_command(msg: types.Message):
                                reply_markup=key_auth.button_auth)
 
 
-@dp.message_handler(lambda message: message.text == "Дома", state=None)
-async def process_profile_command(msg: types.Message):
+# house
+@dp.message_handler(lambda message: message.text == "Дома", state="*")
+async def process_house_command(msg: types.Message, state: FSMContext):
+    await state.reset_state()
     if request_db.is_auth(msg.from_user.id):
         token = request_db.get_token_user(msg.from_user.id)
-        await bot.send_message(msg.chat.id, 'Зашли в Дома', reply_markup=key_base.button_cancel)
+        await bot.send_message(msg.chat.id, 'Меню домов', reply_markup=key_admin.buttons_house)
     else:
         await bot.send_message(msg.chat.id,
                                'Команда не доступна, вы не авторизованы, сначала авторизуйтесь',
                                reply_markup=key_auth.button_auth)
 
 
+@dp.message_handler(lambda message: message.text == "Список домов")
+async def process_house_list_command(msg: types.Message, state: FSMContext):
+    await state.reset_state()
+    if request_db.is_auth(msg.from_user.id):
+        token = request_db.get_token_user(msg.from_user.id)
+        await bot.send_message(msg.chat.id, 'Список', reply_markup=key_admin.button_house_cancel)
+        house_list = request_api.house_list(token)
+        for house in house_list:
+            text = fmt.text(
+                fmt.text(fmt.hbold("Название дома: "), house['name']),
+                fmt.text(fmt.hbold("Улица: "), house['street']),
+                sep="\n"
+            )
+            await bot.send_message(msg.chat.id, text, parse_mode="HTML", reply_markup=key_admin.inline_buttons_house)
+    else:
+        await bot.send_message(msg.chat.id,
+                               'Команда не доступна, вы не авторизованы, сначала авторизуйтесь',
+                               reply_markup=key_auth.button_auth)
+
+
+@dp.message_handler(lambda message: message.text == "Добавить дом")
+async def process_house_create_command(msg: types.Message, state: FSMContext):
+    if request_db.is_auth(msg.from_user.id):
+        token = request_db.get_token_user(msg.from_user.id)
+        await bot.send_message(msg.chat.id, 'Создание', reply_markup=key_admin.button_house_cancel)
+    else:
+        await bot.send_message(msg.chat.id,
+                               'Команда не доступна, вы не авторизованы, сначала авторизуйтесь',
+                               reply_markup=key_auth.button_auth)
+
+
+# flat
 @dp.message_handler(lambda message: message.text == "Квартиры", state=None)
 async def process_profile_command(msg: types.Message):
     if request_db.is_auth(msg.from_user.id):

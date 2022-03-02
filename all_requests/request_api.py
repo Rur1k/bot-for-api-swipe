@@ -181,9 +181,9 @@ def flat_reserved(token, flat_id):
 # house
 
 def house_list(token):
-    data = {}
-    r = requests.get(API + 'house/', data, headers={'Authorization': f'token {token}'})
+    r = requests.get(API + 'house/', headers={'Authorization': f'token {token}'})
     data = r.json()
+    return data
 
 
 def house_create(token):
