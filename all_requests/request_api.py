@@ -53,10 +53,22 @@ def account_detail(token=None):
     return data
 
 
-def account_update(token=None):
-    data = {}
+def account_update(token=None, phone=None, first_name=None, last_name=None):
+    if phone is not None:
+        data = {'phone': phone}
+    elif first_name is not None:
+        data = {'first_name': first_name}
+    elif last_name is not None:
+        data = {'last_name': last_name}
+    else:
+        data = {}
+
     r = requests.patch(API + 'account/profile/', data, headers={'Authorization': f'token {token}'})
     data = r.json()
+    if 'pk' in data:
+        return True
+    else:
+        return False
 
 
 # announcement

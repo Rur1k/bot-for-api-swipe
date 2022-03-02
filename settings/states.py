@@ -13,3 +13,10 @@ class RegistrationStates(StatesGroup):
     repeat_password = State()
     phone = State()
 
+
+class AccountState(StatesGroup):
+    switch = State()
+    phone = State()
+    first_name = State()
+    last_name = State()
+
