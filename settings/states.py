@@ -20,3 +20,7 @@ class AccountState(StatesGroup):
     first_name = State()
     last_name = State()
 
+
+class HouseCreateState(StatesGroup):
+    save = State()
+

@@ -186,10 +186,46 @@ def house_list(token):
     return data
 
 
-def house_create(token):
-    data = {}
+def house_create(token, info):
+    data = {
+        'name': info[0],
+        'district': info[1],
+        'microdistrict': info[2],
+        'street': info[3],
+        'number': info[4],
+        'description': info[5],
+        'lcd_status': info[6],
+        'type_house': info[7],
+        'class_house': info[8],
+        'technologies': info[9],
+        'to_sea': info[10],
+        'payments': info[11],
+        'ceiling_height': info[12],
+        'gas': info[13],
+        'heating': info[14],
+        'sewerage': info[15],
+        'sales_dep_fullname': info[16],
+        'sales_dep_phone': info[17],
+        'sales_dep_email': info[18],
+        'registration': info[19],
+        'calculation_options': info[20],
+        'appointment': info[21],
+        'sum_in_contract': info[22],
+        'state': info[23],
+        'territory': info[24],
+        'maps': info[25],
+        'house_buildings': info[26],
+        'sections': info[27],
+        'floors': info[28],
+        'risers': info[29],
+    }
     r = requests.post(API + 'house/', data, headers={'Authorization': f'token {token}'})
     data = r.json()
+    print(data)
+    if 'id' in data:
+        return True
+    else:
+        return False
 
 
 def house_detail(token, house_id):
