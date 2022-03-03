@@ -33,20 +33,18 @@ button_account_cancel = ReplyKeyboardMarkup(resize_keyboard=True).add(btn_accoun
 
 
 # house
-btn_house_list = KeyboardButton('Список домов')
 btn_house_create = KeyboardButton('Добавить дом')
 
 buttons_house = ReplyKeyboardMarkup(resize_keyboard=True)
-buttons_house.row(btn_house_list, btn_house_create).add(btn_cancel)
+buttons_house.row(btn_house_create, btn_cancel)
 
 button_house_cancel = ReplyKeyboardMarkup(resize_keyboard=True).add(btn_house)
 
-inline_btn_house_info = InlineKeyboardButton('Информация', url='google.com')
 inline_btn_house_update = InlineKeyboardButton('Редактировать', url='google.com')
 inline_btn_house_delete = InlineKeyboardButton('Удалить', url='google.com')
 
 inline_buttons_house = InlineKeyboardMarkup()
-inline_buttons_house.add(inline_btn_house_info).add(inline_btn_house_update).add(inline_btn_house_delete)
+inline_buttons_house.add(inline_btn_house_update).add(inline_btn_house_delete)
 
 
 
