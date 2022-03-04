@@ -241,10 +241,11 @@ def house_update(token, house_id):
 
 
 def house_delete(token, house_id):
-    data = {}
-    r = requests.delete(API + f'house/{house_id}', data, headers={'Authorization': f'token {token}'})
-    data = r.json()
-
+    r = requests.delete(API + f'house/{house_id}', headers={'Authorization': f'token {token}'})
+    if r.status_code == 204:
+        return True
+    else:
+        return False
 
 # notary
 

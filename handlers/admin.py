@@ -110,11 +110,14 @@ async def process_announcement_command(msg: types.Message):
 
 # house
 houses_callback = CallbackData("Houses", "page", "token")
+house_delete_callback = CallbackData("House_delete", 'id', "token")
+house_update_callback = CallbackData("House_update", 'id', "token")
 
 
 def get_houses_keyboard(page, token) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardMarkup(row_width=2)
     house_list = request_api.house_list(token)
+    house_id = house_list[page]['id']
     has_next_page = len(house_list) > page + 1
     if page != 0:
         keyboard.insert(InlineKeyboardButton(
@@ -126,6 +129,10 @@ def get_houses_keyboard(page, token) -> InlineKeyboardMarkup:
                 text="Вперёд >",
                 callback_data=houses_callback.new(page=page + 1, token=token)))
 
+    keyboard.row(InlineKeyboardButton('Редактировать',
+                                      callback_data=house_update_callback.new(id=house_id, token=token)),
+                 InlineKeyboardButton('Удалить',
+                                      callback_data=house_delete_callback.new(id=house_id, token=token)))
     return keyboard
 
 
@@ -223,6 +230,20 @@ async def house_page_handler(query: CallbackQuery, callback_data: dict):
     )
 
     await query.message.edit_text(text, parse_mode="HTML", reply_markup=keyboard)
+
+
+@dp.callback_query_handler(house_delete_callback.filter())
+async def house_delete_handler(query: CallbackQuery, callback_data: dict):
+    id = int(callback_data.get("id"))
+    token = callback_data.get("token")
+    delete_data = request_api.house_delete(token, id)
+
+    if delete_data:
+        text = 'Дом успешно удален! Нажмите "Дома" для обновления актуальных данных'
+    else:
+        text = 'Усп, что-то пошло не так.'
+
+    await query.message.answer(text, reply_markup=key_admin.button_house_cancel)
 
 
 @dp.message_handler(lambda message: message.text == "Добавить дом")
