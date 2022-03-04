@@ -24,3 +24,7 @@ class AccountState(StatesGroup):
 class HouseCreateState(StatesGroup):
     save = State()
 
+
+class HouseUpdateState(StatesGroup):
+    save = State()
+

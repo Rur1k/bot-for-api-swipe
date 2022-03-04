@@ -5,7 +5,7 @@ from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardBut
 from aiogram.utils.callback_data import CallbackData
 
 from settings.config import bot, dp
-from settings.states import AccountState, HouseCreateState
+from settings.states import AccountState, HouseCreateState, HouseUpdateState
 from all_requests import request_api, request_db
 
 from keyboards import auth as key_auth
@@ -246,6 +246,72 @@ async def house_delete_handler(query: CallbackQuery, callback_data: dict):
     await query.message.answer(text, reply_markup=key_admin.button_house_cancel)
 
 
+@dp.callback_query_handler(house_update_callback.filter())
+async def house_update_handler(query: CallbackQuery, callback_data: dict, state: FSMContext):
+    id = int(callback_data.get("id"))
+    token = callback_data.get("token")
+    house_data = request_api.house_detail(token, id)
+    text = fmt.text(
+        fmt.text(fmt.hbold("*** Скопируйте шаблон (без этой строки) и произвидите изминения ***")),
+        fmt.text(fmt.hbold("Название дома: "), house_data['name']),
+        fmt.text(fmt.hbold("Район: "), house_data['district']),
+        fmt.text(fmt.hbold("Микрорайон: "), house_data['microdistrict']),
+        fmt.text(fmt.hbold("Улица: "), house_data['street']),
+        fmt.text(fmt.hbold("Номер: "), house_data['number']),
+        fmt.text(fmt.hbold("Описание: "), house_data['description']),
+        fmt.text(fmt.hbold("Статус ЖК: "), house_data['lcd_status']),
+        fmt.text(fmt.hbold("Тип дома: "), house_data['type_house']),
+        fmt.text(fmt.hbold("Класс дома: "), house_data['class_house']),
+        fmt.text(fmt.hbold("Технологии: "), house_data['technologies']),
+        fmt.text(fmt.hbold("Расстояние до моря: "), house_data['to_sea']),
+        fmt.text(fmt.hbold("Коммунальные платежы: "), house_data['payments']),
+        fmt.text(fmt.hbold("Высота потолка: "), house_data['ceiling_height']),
+        fmt.text(fmt.hbold("Газ: "), house_data['gas']),
+        fmt.text(fmt.hbold("Отопление: "), house_data['heating']),
+        fmt.text(fmt.hbold("Канализация: "), house_data['sewerage']),
+        fmt.text(fmt.hbold("Менеджер по продажам: "), house_data['sales_dep_fullname']),
+        fmt.text(fmt.hbold("Телефон менеджера: "), house_data['sales_dep_phone']),
+        fmt.text(fmt.hbold("Email менеджера: "), house_data['sales_dep_email']),
+        fmt.text(fmt.hbold("Оформление: "), house_data['registration']),
+        fmt.text(fmt.hbold("Варианты расчета: "), house_data['calculation_options']),
+        fmt.text(fmt.hbold("Назначение: "), house_data['appointment']),
+        fmt.text(fmt.hbold("Сумма в договоре : "), house_data['sum_in_contract']),
+        fmt.text(fmt.hbold("Статус: "), house_data['state']),
+        fmt.text(fmt.hbold("Территория: "), house_data['territory']),
+        fmt.text(fmt.hbold("Карта: "), house_data['maps']),
+        fmt.text(fmt.hbold("Кол-во корпусов: "), house_data['house_buildings']),
+        fmt.text(fmt.hbold("Кол-во секций: "), house_data['sections']),
+        fmt.text(fmt.hbold("Кол-во этажей: "), house_data['floors']),
+        fmt.text(fmt.hbold("Кол-во стояков: "), house_data['risers']),
+        sep="\n"
+    )
+    await state.update_data(id=id)
+    await HouseUpdateState.save.set()
+    await query.message.answer(text, parse_mode="HTML", reply_markup=key_admin.button_house_cancel)
+
+
+@dp.message_handler(state=HouseUpdateState.save)
+async def house_update_state(msg: types.Message, state: FSMContext):
+    house_data = msg.text
+    data = await state.get_data()
+    id = data.get('id')
+    token = request_db.get_token_user(msg.from_user.id)
+    house_data = house_data.split('\n')
+    data_for_save = []
+    for data in house_data:
+        data = data.split(':')
+        data_for_save.append(data[1].strip())
+
+    save_data = request_api.house_update(token, id, data_for_save)
+    if save_data:
+        await bot.send_message(msg.chat.id, 'Дом успешно обновлен.',
+                               reply_markup=key_admin.button_house_cancel)
+    else:
+        await bot.send_message(msg.chat.id, 'Усп, что-то пошло не так.',
+                               reply_markup=key_admin.button_house_cancel)
+    await state.reset_state()
+
+
 @dp.message_handler(lambda message: message.text == "Добавить дом")
 async def process_house_create_command(msg: types.Message, state: FSMContext):
     if request_db.is_auth(msg.from_user.id):
@@ -294,7 +360,7 @@ async def process_house_create_command(msg: types.Message, state: FSMContext):
 
 
 @dp.message_handler(state=HouseCreateState.save)
-async def account_last_name(msg: types.Message, state: FSMContext):
+async def house_create_state(msg: types.Message, state: FSMContext):
     house_data = msg.text
     await state.reset_state()
     token = request_db.get_token_user(msg.from_user.id)
