@@ -47,7 +47,8 @@ def logout(token):
 def my_user_id(token):
     r = requests.post(AUTH + 'users/me', headers={'Authorization': f'token {token}'})
     data = r.json()
-    print(data)
+    if 'id' in data:
+        return data['id']
 
 # API
 # account
@@ -128,21 +129,46 @@ def announcement_my_detail(token, anno_id):
 # favorite
 
 def favorite_list(token):
-    data = {}
-    r = requests.get(API + 'favorite/', data, headers={'Authorization': f'token {token}'})
+    r = requests.get(API + 'favorite/', headers={'Authorization': f'token {token}'})
     data = r.json()
+    return data
 
 
-def favorite_create(token):
-    data = {}
+def favorite_id_list(token):
+    r = requests.get(API + 'favorite/', headers={'Authorization': f'token {token}'})
+    data = r.json()
+    arr = []
+    for i in data:
+        arr.append(i['announcement'])
+    return arr
+
+
+def favorite_create(token, announcement_id, user_id):
+    data = {
+        'user': user_id,
+        'announcement': announcement_id
+    }
     r = requests.post(API + 'favorite/', data, headers={'Authorization': f'token {token}'})
     data = r.json()
+    if 'id' in data:
+        return True
+    else:
+        return False
 
 
-def favorite_delete(token, favorite_id):
-    data = {}
-    r = requests.delete(API + f'favorite/{favorite_id}', data, headers={'Authorization': f'token {token}'})
-    data = r.json()
+def favorite_delete(token, announcement_id, user_id):
+    favorites = favorite_list(token)
+    for favorite in favorites:
+        if favorite['announcement'] == announcement_id and favorite['user'] == user_id:
+            favorite_id = favorite['id']
+            r = requests.delete(API + f'favorite/{favorite_id}', headers={'Authorization': f'token {token}'})
+            if r.status_code == 204:
+                return True
+            else:
+                return False
+    else:
+        return False
+
 
 
 # flat
