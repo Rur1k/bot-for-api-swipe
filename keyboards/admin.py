@@ -40,11 +40,37 @@ buttons_house.row(btn_house_create, btn_cancel)
 
 button_house_cancel = ReplyKeyboardMarkup(resize_keyboard=True).add(btn_house)
 
-inline_btn_house_update = InlineKeyboardButton('Редактировать', url='google.com')
-inline_btn_house_delete = InlineKeyboardButton('Удалить', url='google.com')
+# flat
+btn_flat_create = KeyboardButton('Добавить квартиру')
 
-inline_buttons_house = InlineKeyboardMarkup()
-inline_buttons_house.add(inline_btn_house_update).add(inline_btn_house_delete)
+buttons_flat = ReplyKeyboardMarkup(resize_keyboard=True)
+buttons_flat.row(btn_flat_create, btn_cancel)
+
+button_flat_cancel = ReplyKeyboardMarkup(resize_keyboard=True).add(btn_flat)
+
+# annoucement
+btn_announcement_create = KeyboardButton('Добавить объявление')
+
+buttons_announcement = ReplyKeyboardMarkup(resize_keyboard=True)
+buttons_announcement.row(btn_announcement_create, btn_cancel)
+
+button_announcement_cancel = ReplyKeyboardMarkup(resize_keyboard=True).add(btn_announcement)
+
+# notary
+btn_notary_create = KeyboardButton('Добавить нотариуса')
+
+buttons_notary = ReplyKeyboardMarkup(resize_keyboard=True)
+buttons_notary.row(btn_notary_create, btn_cancel)
+
+button_notary_cancel = ReplyKeyboardMarkup(resize_keyboard=True).add(btn_notary)
+
+# user
+btn_user_blacklist = KeyboardButton('Черный список')
+
+buttons_user = ReplyKeyboardMarkup(resize_keyboard=True)
+buttons_user.row(btn_user_blacklist, btn_cancel)
+
+button_user_cancel = ReplyKeyboardMarkup(resize_keyboard=True).add(btn_users)
 
 
 

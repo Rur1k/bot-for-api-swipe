@@ -28,3 +28,27 @@ class HouseCreateState(StatesGroup):
 class HouseUpdateState(StatesGroup):
     save = State()
 
+
+class FlatCreateState(StatesGroup):
+    save = State()
+
+
+class FlatUpdateState(StatesGroup):
+    save = State()
+
+
+class AnnouncementCreateState(StatesGroup):
+    save = State()
+
+
+class AnnouncementUpdateState(StatesGroup):
+    save = State()
+
+
+class NotaryCreateState(StatesGroup):
+    save = State()
+
+
+class NotaryUpdateState(StatesGroup):
+    save = State()
+

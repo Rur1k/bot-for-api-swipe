@@ -44,6 +44,11 @@ def logout(token):
     return True
 
 
+def my_user_id(token):
+    r = requests.post(AUTH + 'users/me', headers={'Authorization': f'token {token}'})
+    data = r.json()
+    print(data)
+
 # API
 # account
 
@@ -73,9 +78,9 @@ def account_update(token=None, phone=None, first_name=None, last_name=None):
 
 # announcement
 def announcement_list(token):
-    data = {}
-    r = requests.get(API + 'announcement/', data, headers={'Authorization': f'token {token}'})
+    r = requests.get(API + 'announcement/', headers={'Authorization': f'token {token}'})
     data = r.json()
+    return data
 
 
 def announcement_create(token):
@@ -143,33 +148,65 @@ def favorite_delete(token, favorite_id):
 # flat
 
 def flat_list(token):
-    data = {}
-    r = requests.get(API + 'flat/', data, headers={'Authorization': f'token {token}'})
+    r = requests.get(API + 'flat/', headers={'Authorization': f'token {token}'})
     data = r.json()
+    return data
 
 
-def flat_create(token):
-    data = {}
+def flat_create(token, info):
+    data = {
+        'house': info[0],
+        'house_building': info[1],
+        'section': info[2],
+        'floor': info[3],
+        'number': info[4],
+        'riser': info[5],
+        'count_room': info[6],
+        'square': info[7],
+        'price_per_meter': info[8],
+        'reserved': info[9],
+    }
     r = requests.post(API + 'flat/', data, headers={'Authorization': f'token {token}'})
     data = r.json()
+    if 'id' in data:
+        return True
+    else:
+        return False
 
 
 def flat_delete(token, flat_id):
-    data = {}
-    r = requests.delete(API + f'flat/{flat_id}', data, headers={'Authorization': f'token {token}'})
-    data = r.json()
+    r = requests.delete(API + f'flat/{flat_id}', headers={'Authorization': f'token {token}'})
+    if r.status_code == 204:
+        return True
+    else:
+        return False
 
 
 def flat_detail(token, flat_id):
-    data = {}
-    r = requests.get(API + f'flat/{flat_id}', data, headers={'Authorization': f'token {token}'})
+    r = requests.get(API + f'flat/{flat_id}', headers={'Authorization': f'token {token}'})
     data = r.json()
+    return data
 
 
-def flat_update(token, flat_id):
-    data = {}
+def flat_update(token, flat_id, info):
+    data = {
+        'house': info[0],
+        'house_building': info[1],
+        'section': info[2],
+        'floor': info[3],
+        'number': info[4],
+        'riser': info[5],
+        'count_room': info[6],
+        'square': info[7],
+        'price_per_meter': info[8],
+        'reserved': info[9],
+    }
     r = requests.patch(API + f'flat/{flat_id}', data, headers={'Authorization': f'token {token}'})
     data = r.json()
+    if 'id' in data:
+        return True
+    else:
+        return False
 
 
 def flat_reserved(token, flat_id):
@@ -285,50 +322,73 @@ def house_delete(token, house_id):
 
 
 def notary_list(token):
-    data = {}
-    r = requests.get(API + 'notary/', data, headers={'Authorization': f'token {token}'})
+    r = requests.get(API + 'notary/', headers={'Authorization': f'token {token}'})
     data = r.json()
+    return data
 
 
-def notary_create(token):
-    data = {}
+def notary_create(token, info):
+    data = {
+        'first_name': info[0],
+        'last_name': info[1],
+        'phone': info[2],
+        'email': info[3],
+    }
     r = requests.post(API + 'notary/', data, headers={'Authorization': f'token {token}'})
     data = r.json()
+    if 'id' in data:
+        return True
+    else:
+        return False
 
 
 def notary_detail(token, notary_id):
-    data = {}
-    r = requests.get(API + f'notary/{notary_id}', data, headers={'Authorization': f'token {token}'})
+    r = requests.get(API + f'notary/{notary_id}', headers={'Authorization': f'token {token}'})
     data = r.json()
+    return data
 
 
-def notary_update(token, notary_id):
-    data = {}
+def notary_update(token, notary_id, info):
+    data = {
+        'first_name': info[0],
+        'last_name': info[1],
+        'phone': info[2],
+        'email': info[3],
+    }
     r = requests.patch(API + f'notary/{notary_id}', data, headers={'Authorization': f'token {token}'})
     data = r.json()
+    if 'id' in data:
+        return True
+    else:
+        return False
 
 
 def notary_delete(token, notary_id):
-    data = {}
-    r = requests.delete(API + f'notary/{notary_id}', data, headers={'Authorization': f'token {token}'})
-    data = r.json()
+    r = requests.delete(API + f'notary/{notary_id}', headers={'Authorization': f'token {token}'})
+    if r.status_code == 204:
+        return True
+    else:
+        return False
 
 # users
 
 
 def user_list(token):
-    data = {}
-    r = requests.get(API + 'users/', data, headers={'Authorization': f'token {token}'})
+    r = requests.get(API + 'users/', headers={'Authorization': f'token {token}'})
     data = r.json()
+    return data
 
 
 def user_blacklist(token):
-    data = {}
-    r = requests.get(API + 'users/blacklist/', data, headers={'Authorization': f'token {token}'})
+    r = requests.get(API + 'users/blacklist/', headers={'Authorization': f'token {token}'})
     data = r.json()
+    return data
 
 
 def user_blacklist_update(token, user_id):
-    data = {}
-    r = requests.patch(API + f'users/blacklist/{user_id}', data, headers={'Authorization': f'token {token}'})
+    r = requests.patch(API + f'users/blacklist/{user_id}', headers={'Authorization': f'token {token}'})
     data = r.json()
+    if 'pk' in data:
+        return True
+    else:
+        return False

@@ -23,6 +23,8 @@ def get_token_user(user_id):
             return user.token
 
 
+
+
 def is_auth(user_id):
     users = UserToken.select().where(UserToken.user == user_id)
     user = users.first()
