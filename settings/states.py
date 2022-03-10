@@ -12,6 +12,8 @@ class RegistrationStates(StatesGroup):
     password = State()
     repeat_password = State()
     phone = State()
+    wait_reg = State()
+    edit_regdata = State()
 
 
 class AccountState(StatesGroup):
